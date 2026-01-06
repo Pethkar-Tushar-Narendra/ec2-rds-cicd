@@ -16,7 +16,7 @@ pipeline {
                 // Replace with your EC2 details
                 withCredentials([sshUserPrivateKey(credentialsId: 'deploy-key', keyFileVariable: 'KEY')]) {
                     sh '''
-                    rsync -avz -e "ssh -i $KEY -o StrictHostKeyChecking=no" backend/ ubuntu@65.2.63.245:/home/ubuntu/backend/
+                    rsync -avz --no-group -e "ssh -i $KEY -o StrictHostKeyChecking=no" backend/ ubuntu@65.2.63.245:/home/ubuntu/backend/
                     ssh -i $KEY -o StrictHostKeyChecking=no ubuntu@65.2.63.245 "cd /home/ubuntu/backend && npm install && pkill node || true && nohup node index.js &"
                     '''
                 }
