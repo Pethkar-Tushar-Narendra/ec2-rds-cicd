@@ -32,6 +32,11 @@
       become: false
       # vars removed: ansible_ssh_private_key_file
 
+    - name: Install net-tools
+      apt:
+        name: net-tools
+        state: present
+
     - name: Install backend dependencies
       shell: |
         cd /home/ubuntu/backend
@@ -47,9 +52,34 @@
         backrefs: yes
       become: false
 
-    - name: Start backend
-      shell: |
-        cd /home/ubuntu/backend
-        nohup node index.js &
-      args:
-        executable: /bin/bash
+    - name: Create systemd service for backend
+      copy:
+        dest: /etc/systemd/system/backend.service
+        content: |
+          [Unit]
+          Description=Node.js Backend
+          After=network.target
+
+          [Service]
+          Type=simple
+          User=ubuntu
+          WorkingDirectory=/home/ubuntu/backend
+          ExecStart=/usr/bin/node /home/ubuntu/backend/index.js
+          Restart=always
+          Environment=PORT=3000
+
+          [Install]
+          WantedBy=multi-user.target
+      become: yes
+
+    - name: Reload systemd
+      systemd:
+        daemon_reload: yes
+      become: yes
+
+    - name: Start and enable backend service
+      systemd:
+        name: backend
+        state: started
+        enabled: yes
+      become: yes
