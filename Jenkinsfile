@@ -13,10 +13,13 @@ pipeline {
         }
         stage('Deploy with Ansible') {
             steps {
-                withCredentials([sshUserPrivateKey(credentialsId: 'deploy-key', keyFileVariable: 'KEY')]) {
+                withCredentialssshUserPrivateKey(credentialsId: 'deploy-key', keyFileVariable: 'KEY')]) {
                     sh '''
                     export ANSIBLE_HOST_KEY_CHECKING=False
-                    ansible-playbook -i ansible/inventory ansible/deploy-backend.yml --private-key $KEY
+                    echo "$KEY" > /tmp/deploy-key.pem
+                    chmod 600 /tmp/deploy-key.pem
+                    ansible-playbook -i ansible/inventory [deploy-backend.yml](http://_vscodecontentref_/0) --private-key /tmp/deploy-key.pem
+                    rm /tmp/deploy-key.pem
                     '''
                 }
             }
