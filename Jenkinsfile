@@ -18,7 +18,7 @@ pipeline {
         stage('Deploy to EC2') {
             steps {
                 // Replace with your EC2 details
-                withCredentials([sshUserPrivateKey(credentialsId: 'jenkins-ec2-key', keyFileVariable: 'KEY')]) {
+                withCredentials([sshUserPrivateKey(credentialsId: 'deploy-key', keyFileVariable: 'KEY')]) {
                     sh '''
                     rsync -avz -e "ssh -i $KEY -o StrictHostKeyChecking=no" backend/ ubuntu@65.2.63.245:/home/ubuntu/backend/
                     ssh -i $KEY -o StrictHostKeyChecking=no ubuntu@65.2.63.245 "cd /home/ubuntu/backend && npm install && pkill node || true && nohup node index.js &"
