@@ -26,6 +26,7 @@
         recursive: yes
         rsync_opts:
           - "--no-group"
+          - "--no-times"
       delegate_to: localhost
       become: false
       # vars removed: ansible_ssh_private_key_file
