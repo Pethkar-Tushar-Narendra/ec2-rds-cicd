@@ -1,0 +1,41 @@
+---
+- name: Deploy Node.js backend on EC2
+  hosts: all
+  become: yes
+  vars:
+    node_version: "20.x"
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install Node.js
+      apt:
+        name: nodejs
+        state: present
+
+    - name: Install npm
+      apt:
+        name: npm
+        state: present
+
+    - name: Copy backend files
+      synchronize:
+        src: ../backend/
+        dest: /home/ubuntu/backend/
+        recursive: yes
+      delegate_to: localhost
+
+    - name: Install backend dependencies
+      shell: |
+        cd /home/ubuntu/backend
+        npm install
+      args:
+        executable: /bin/bash
+
+    - name: Start backend
+      shell: |
+        cd /home/ubuntu/backend
+        nohup node index.js &
+      args:
+        executable: /bin/bash
