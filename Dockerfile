@@ -1,4 +1,4 @@
 FROM jenkins/jenkins:lts
 USER root
-RUN apt-get update && apt-get install -y nodejs npm rsync
+RUN apt-get update && apt-get install -y nodejs npm rsync ansible
 USER jenkins

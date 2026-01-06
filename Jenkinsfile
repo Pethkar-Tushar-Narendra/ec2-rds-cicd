@@ -14,7 +14,10 @@ pipeline {
         stage('Deploy with Ansible') {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'deploy-key', keyFileVariable: 'KEY')]) {
-                    sh 'ansible-playbook -i ansible/inventory ansible/deploy-backend.yml --private-key $KEY'
+                    sh '''
+                    export ANSIBLE_HOST_KEY_CHECKING=False
+                    ansible-playbook -i ansible/inventory ansible/deploy-backend.yml --private-key $KEY
+                    '''
                 }
             }
         }
