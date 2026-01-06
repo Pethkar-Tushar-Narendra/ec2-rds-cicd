@@ -6,9 +6,14 @@ pipeline {
                 checkout scm
             }
         }
-        stage('Install dependencies') {
+        stage('Build') {
             steps {
                 sh 'cd backend && npm install'
+            }
+        }
+        stage('Test') {
+            steps {
+                sh 'cd backend && npm test'
             }
         }
         stage('Deploy with Ansible') {
