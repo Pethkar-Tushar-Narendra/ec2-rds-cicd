@@ -25,8 +25,7 @@
         dest: /home/ubuntu/backend/
         recursive: yes
       delegate_to: localhost
-      vars:
-        ansible_ssh_private_key_file: ~/.ssh/deploy-key.pem
+      # vars removed: ansible_ssh_private_key_file
 
     - name: Install backend dependencies
       shell: |
