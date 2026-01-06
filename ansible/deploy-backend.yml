@@ -39,6 +39,14 @@
       args:
         executable: /bin/bash
 
+    - name: Ensure backend listens on 0.0.0.0
+      lineinfile:
+        path: /home/ubuntu/backend/index.js
+        regexp: '^app\.listen\(.*\)$'
+        line: "app.listen(3000, '0.0.0.0')"
+        backrefs: yes
+      become: false
+
     - name: Start backend
       shell: |
         cd /home/ubuntu/backend
